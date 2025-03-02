@@ -1,6 +1,6 @@
-========================================
+=============================================
 Official Python package for CRU DataLab's API
-========================================
+=============================================
 
 This is the official documentation for CRU DataLab's Python Package. The package can be used for obtaining data from the datasets from the site datalab.crugroup.com and uploading data to datasets. This package is compatible with Python v3.9+.
 
@@ -271,9 +271,9 @@ Also every series in res has get() method to load data for it::
 
     series_data = res[0].get()
 
-*******************************************************
+*************************************************************
 Possible errors in CRU DataLab package and how to avoid them
-*******************************************************
+*************************************************************
 1. "ValueError: Dataset id is not specified"
 
 This error appears when you use None instead dataset's Id.
