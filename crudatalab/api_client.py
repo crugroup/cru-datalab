@@ -60,6 +60,17 @@ class ApiClient:
     def _get_url(self, apipath):
         return urllib.parse.urlunsplit((self._schema, self._host, apipath, '', ''))
 
+    def _append_call_source(self, url):
+        parts = urllib.parse.urlsplit(url)
+        query_items = urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
+        for key, _ in query_items:
+            if key == 'call_source':
+                return url
+
+        query_items.append(('call_source', 'python'))
+        query = urllib.parse.urlencode(query_items)
+        return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, query, parts.fragment))
+
     def _get_request_headers(self):
 
         if not self._appid or not self._appsecret:
@@ -84,6 +95,7 @@ class ApiClient:
         url = self._get_url(apipath)
         if query:
             url = '{}?{}'.format(url, query)
+        url = self._append_call_source(url)
 
         headers = self._get_request_headers()
         req = urllib.request.Request(url, headers=headers)
@@ -99,6 +111,7 @@ class ApiClient:
     def _api_post_json(self, responseobj, apipath, requestjson):
 
         url = self._get_url(apipath)
+        url = self._append_call_source(url)
 
         binary_data = requestjson.encode()
 
@@ -192,6 +205,7 @@ class ApiClient:
     def get_indicator_info(self, path):
         path = 'api/1.0/sema/{0}'.format(path)
         url = self._get_url(path)
+        url = self._append_call_source(url)
 
         headers = self._get_request_headers()
         req = urllib.request.Request(url, headers=headers)
@@ -205,6 +219,7 @@ class ApiClient:
 
         headers = self._get_request_headers()
         url = self._search_config.build_search_url(query)
+        url = self._append_call_source(url)
         req = urllib.request.Request(url, headers=headers)
         req = urllib.request.Request(url)
         resp = self._opener.open(req)
@@ -215,6 +230,7 @@ class ApiClient:
         """The method is posting file to the remote server"""
 
         url = self._get_url('/api/1.0/upload/post')
+        url = self._append_call_source(url)
 
         fcontent = FileContent(file)
         binary_data = fcontent.get_binary()
@@ -293,6 +309,7 @@ class ApiClient:
         """The method is deleting dataset by it's id"""
 
         url = self._get_url('/api/1.0/meta/dataset/{}/delete'.format(dataset))
+        url = self._append_call_source(url)
 
         json_data = ''
         binary_data = json_data.encode()
