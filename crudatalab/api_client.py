@@ -60,16 +60,15 @@ class ApiClient:
     def _get_url(self, apipath):
         return urllib.parse.urlunsplit((self._schema, self._host, apipath, '', ''))
 
-    def _append_call_source(self, url):
+    def _add_param(self, url, key, value):
         parts = urllib.parse.urlsplit(url)
-        query_items = urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
-        for key, _ in query_items:
-            if key == 'call_source':
-                return url
-
-        query_items.append(('call_source', 'python'))
-        query = urllib.parse.urlencode(query_items)
+        query_items = urllib.parse.parse_qs(parts.query, keep_blank_values=True)
+        query_items.setdefault(key, [value])
+        query = urllib.parse.urlencode(query_items, doseq=True)
         return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, query, parts.fragment))
+
+    def _append_call_source(self, url):
+        return self._add_param(url, 'call_source', 'python')
 
     def _get_request_headers(self):
 
