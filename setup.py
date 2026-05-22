@@ -7,7 +7,7 @@ def readme():
 setup(
   name = 'crudatalab',
   packages = ['crudatalab'],
-  version = '1.3.1',
+  version = '1.3.2',
   description = "Official Python package for CRU DataLab's API",
   long_description=readme(),
   author = 'CRU International Limited',
