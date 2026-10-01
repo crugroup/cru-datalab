@@ -49,7 +49,7 @@ class ApiClient:
             self._host = splitted.path.strip()
         self._schema = splitted.scheme
         if not self._schema:
-            self._schema = 'http'
+            self._schema = 'https'
 
         self._appid = appid
         self._appsecret = appsecret
